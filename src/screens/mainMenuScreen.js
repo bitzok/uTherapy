@@ -10,7 +10,7 @@ const RegisterScreen = () => {
 
   return (
     <LinearGradient
-    colors={['#ff804c', '#ffd5c0']}
+    colors={['#ff804c', '#ffcab0']}
     start={{ x: 1, y: 0 }}
     end={{ x: 0, y: 1 }}
     style={styles.background}
@@ -28,13 +28,13 @@ const RegisterScreen = () => {
           Obtén más información sobre cómo procesamos tus datos en nuestra Política de privacidad y Política de cookies.
         </Text>
 
-        <TouchableOpacity style={[styles.button, styles.emailButton]} onPress={() => navigation.navigate('EmailLogin')}>
+        <TouchableOpacity style={[styles.button, styles.emailButton]} onPress={() => navigation.navigate('Register')}>
           <MaterialIcons name="email" size={24} color="white" />
           <Text style={styles.buttonText}>Regístrate con tu email</Text>
         </TouchableOpacity>
 
         {/* Enlace para iniciar sesión si ya tiene cuenta */}
-        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+        <TouchableOpacity onPress={() => navigation.navigate('MainChat')}>
           <Text style={styles.loginText}>
             ¿Ya tienes cuenta? <Text style={styles.loginLink}>INGRESA</Text>
           </Text>
