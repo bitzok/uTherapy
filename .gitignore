@@ -34,3 +34,58 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Cython debug symbols
+cython_debug/
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+media/
+staticfiles/
+
+# Python virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# pipenv
+Pipfile.lock
+
+# pyenv
+.python-version
+
+# mypy
+.mypy_cache/
+
+# pytest
+.pytest_cache/
+
+# coverage reports
+htmlcov/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+
+# FastAPI/Starlette temporary files
+instance/
+
+.env
+.env.*
+
+*.sql
+*.dump
+
+**/migrations/
+!**/migrations/__init__.py
