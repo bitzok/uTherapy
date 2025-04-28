@@ -26,7 +26,7 @@ const ChatScreen = ({ navigation }) => {
     flatListRef.current?.scrollToEnd({ animated: true });
   }, [messages]);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (input.trim() === '') return;
 
     const userMessage = {
@@ -46,19 +46,54 @@ const ChatScreen = ({ navigation }) => {
     };
     setMessages((prev) => [...prev, typingPlaceholder]);
 
-    setTimeout(() => {
+    try {
+      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer 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`, 
+        },
+        body: JSON.stringify({
+          model: 'deepseek/deepseek-r1:free', 
+          messages: [
+            { role: 'system', content: 'Eres un asistente útil.' },
+            { role: 'user', content: input }
+          ],
+          temperature: 0.7
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Error en la respuesta de DeepSeek');
+      }
+  
+      const data = await response.json();
+      const botMessage = data.choices[0].message.content;
+  
       const botResponse = {
         id: Date.now().toString() + '_bot',
-        text: '¡Hola! Soy uBot 🤖 ¿En qué puedo ayudarte hoy?',
+        text: botMessage,
         fromMe: false,
       };
-
-      // Reemplazar mensaje "escribiendo" por respuesta real
+  
       setMessages((prev) => [
         ...prev.filter((msg) => msg.id !== 'typing'),
         botResponse,
       ]);
-    }, 1500);
+    } catch (error) {
+      console.error(error);
+      const errorMessage = {
+        id: Date.now().toString() + '_error',
+        text: 'Lo siento, hubo un error al conectar con uBot 🤖',
+        fromMe: false,
+      };
+  
+      setMessages((prev) => [
+        ...prev.filter((msg) => msg.id !== 'typing'),
+        errorMessage,
+      ]);
+    }
+
   };
 
   const renderItem = ({ item }) => {

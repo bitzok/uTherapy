@@ -34,7 +34,7 @@ const RegisterScreen = () => {
         </TouchableOpacity>
 
         {/* Enlace para iniciar sesión si ya tiene cuenta */}
-        <TouchableOpacity onPress={() => navigation.navigate('MainChat')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
           <Text style={styles.loginText}>
             ¿Ya tienes cuenta? <Text style={styles.loginLink}>INGRESA</Text>
           </Text>
