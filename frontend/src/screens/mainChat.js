@@ -13,11 +13,11 @@ import {
   StatusBar
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import Markdown from 'react-native-markdown-display';
 
 const ChatScreen = ({ navigation }) => {
   const [messages, setMessages] = useState([
-    { id: '1', text: '¡Hola! ¿Cómo estás?', fromMe: false },
-    { id: '2', text: '¡Todo bien, gracias! ¿Y tú?', fromMe: true },
+    { id: '1', text: '¡Hola! Soy uBot ¿En qué puedo servirle?', fromMe: false },
   ]);
   const [input, setInput] = useState('');
   const flatListRef = useRef();
@@ -54,7 +54,7 @@ const ChatScreen = ({ navigation }) => {
           'Authorization': `Bearer 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`, 
         },
         body: JSON.stringify({
-          model: 'deepseek/deepseek-r1:free', 
+          model: 'deepseek/deepseek-r1:free',
           messages: [
             { role: 'system', content: 'Eres un asistente útil.' },
             { role: 'user', content: input }
@@ -93,7 +93,12 @@ const ChatScreen = ({ navigation }) => {
         errorMessage,
       ]);
     }
+  };
 
+  // Esta función detecta si el texto tiene Markdown
+  const hasMarkdown = (text) => {
+    const markdownRegex = /(\*{1,2}.+\*{1,2}|\[.+\]\(.+\)|\`{1,3}.+\`{1,3}|\~{2}.+\~{2})/;
+    return markdownRegex.test(text);
   };
 
   const renderItem = ({ item }) => {
@@ -118,14 +123,27 @@ const ChatScreen = ({ navigation }) => {
               : styles.otherMessage,
           ]}
         >
-          <Text
-            style={[
-              styles.messageText,
-              isTyping ? styles.typingBubbleText : null,
-            ]}
-          >
-            {item.text}
-          </Text>
+          {hasMarkdown(item.text) ? (
+            <Markdown
+              style={{
+                body: [
+                  styles.messageText,
+                  isTyping ? styles.typingBubbleText : null,
+                ],
+              }}
+            >
+              {item.text}
+            </Markdown>
+          ) : (
+            <Text
+              style={[
+                styles.messageText,
+                isTyping ? styles.typingBubbleText : null,
+              ]}
+            >
+              {item.text}
+            </Text>
+          )}
         </View>
       </View>
     );
@@ -134,7 +152,6 @@ const ChatScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="light-content" backgroundColor="#FF804C" />
-
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.container}
