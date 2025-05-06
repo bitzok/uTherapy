@@ -15,6 +15,8 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import Markdown from 'react-native-markdown-display';
 
+const API_BASE_URL = 'http://localhost:8000';
+
 const ChatScreen = ({ navigation }) => {
   const [messages, setMessages] = useState([
     { id: '1', text: '¡Hola! Soy uBot ¿En qué puedo servirle?', fromMe: false },
@@ -47,14 +49,12 @@ const ChatScreen = ({ navigation }) => {
     setMessages((prev) => [...prev, typingPlaceholder]);
 
     try {
-      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      const response = await fetch(`${API_BASE_URL}/modelCall/chat/completions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer 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`, 
         },
         body: JSON.stringify({
-          model: 'deepseek/deepseek-r1:free',
           messages: [
             { role: 'system', content: 'Eres un asistente útil.' },
             { role: 'user', content: input }
