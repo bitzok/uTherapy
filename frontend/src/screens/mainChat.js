@@ -15,7 +15,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import Markdown from 'react-native-markdown-display';
 
-const API_BASE_URL = 'http://localhost:8000';
+import { API_BASE_URL } from '@env';
 
 const ChatScreen = ({ navigation }) => {
   const [messages, setMessages] = useState([

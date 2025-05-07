@@ -1,29 +1,45 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-} from "react-native";
+import { View, Text, TextInput,
+  TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+
+import { API_BASE_URL } from '@env';
 
 const EmailLoginScreen = () => {
   const [email, setEmail] = useState("");
   const navigation = useNavigation();
 
-  const handleSendOTP = () => {
+  const handleSendOTP = async () => {
     if (!email.endsWith("@unmsm.edu.pe")) {
       Alert.alert("Error", "Solo se permiten correos de @unmsm.edu.pe");
       return;
     }
-
-    Alert.alert("Código enviado", "Revisa tu correo electrónico.");
-
-    setTimeout(() => {
-      navigation.navigate("VerificationCode", { email });
-    }, 1000);
+  
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        Alert.alert("Error", errorData.message || "Error al registrar.");
+        return;
+      }
+  
+      Alert.alert("Código enviado", "Revisa tu correo electrónico.");
+  
+      setTimeout(() => {
+        navigation.navigate("VerificationCode", { email });
+      }, 1000);
+  
+    } catch (error) {
+      console.error("Error:", error);
+      Alert.alert("Error", "No se pudo conectar con el servidor.");
+    }
   };
 
   return (

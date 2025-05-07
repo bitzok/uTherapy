@@ -24,8 +24,8 @@ router = APIRouter()
 
 @router.post("/register")
 def register_user(request: EmailRequest):
-    # if not re.match(r"^[\w\.-]+@unmsm\.edu\.pe$", request.email):
-    #     raise HTTPException(status_code=400, detail="Dominio no permitido")
+    if not re.match(r"^[\w\.-]+@unmsm\.edu\.pe$", request.email):
+        raise HTTPException(status_code=400, detail="Solo se permiten correos de la UNMSM")
 
     code = generate_verification_code()
     send_verification_email(request.email, code)
