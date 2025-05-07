@@ -83,6 +83,7 @@ instance/
 
 .env
 .env.*
+backend/.env
 
 *.sql
 *.dump
