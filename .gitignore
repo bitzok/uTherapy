@@ -82,7 +82,6 @@ coverage.xml
 instance/
 
 .env
-.env.*
 backend/.env
 
 *.sql
