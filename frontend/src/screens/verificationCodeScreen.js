@@ -1,12 +1,9 @@
 import React, { useState, useRef } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
+import { View, Text, TextInput,
+  TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
+
+import { API_BASE_URL } from '@env';
 
 const VerificationCodeScreen = () => {
   const navigation = useNavigation();
@@ -15,8 +12,36 @@ const VerificationCodeScreen = () => {
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const inputsRef = useRef([]);
 
-  const handleContinue = () => {
-    navigation.navigate("Password", { email });
+  const handleContinue = async () => {
+    const verificationCode = code.join("");
+  
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/verify`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          code: verificationCode,
+        }),
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(errorData.detail || "Código inválido o expirado.");
+        return;
+      }
+  
+      const data = await response.json();
+      const token = data.token;
+  
+      navigation.navigate("Password", { email, token });
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Error al verificar el código.");
+    }
   };
 
   const handleInputChange = (text, index) => {

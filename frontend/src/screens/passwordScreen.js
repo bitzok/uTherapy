@@ -1,23 +1,19 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-} from "react-native";
+import { View, Text, TextInput,
+  TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
+
+import { API_BASE_URL } from '@env';
 
 const PasswordScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const email = route?.params?.email || "correo@unmsm.edu.pe";
+  const { email, token } = route.params;
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (password.length < 6) {
       Alert.alert("Error", "La contraseña debe tener al menos 6 caracteres.");
       return;
@@ -28,9 +24,31 @@ const PasswordScreen = () => {
       return;
     }
 
-    // Simulación de registro exitoso
-    Alert.alert("Registro exitoso", "Tu cuenta ha sido creada correctamente.");
-    navigation.navigate("MainChat", { email });
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/register/password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          token,
+          password,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        Alert.alert("Error", errorData.message || "No se pudo registrar.");
+        return;
+      }
+
+      Alert.alert("Registro exitoso", "Tu cuenta ha sido creada correctamente.");
+      navigation.navigate("MainChat", { email });
+
+    } catch (error) {
+      console.error("Error:", error);
+      Alert.alert("Error", "No se pudo conectar con el servidor.");
+    }
   };
 
   return (

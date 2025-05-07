@@ -1,15 +1,10 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-  ActivityIndicator,
-} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity,
+  StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
+
+import { API_BASE_URL } from '@env';
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -17,25 +12,49 @@ const LoginScreen = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email || !password) {
       Alert.alert('Error', 'Por favor ingresa tu correo y contraseña');
       return;
     }
-
+  
     setLoading(true);
-    
+  
     try {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        Alert.alert('Error', errorData.detail || 'Correo o contraseña incorrectos');
+        return;
+      }
+  
+      const data = await response.json();
+      const accessToken = data.access_token;
+  
+      // Aquí podrías guardar el token en AsyncStorage si es necesario
+      // await AsyncStorage.setItem("accessToken", accessToken);
+  
       Alert.alert('Éxito', 'Inicio de sesión correcto');
-      navigation.navigate('MainChat', { email });
-      
+      navigation.navigate('MainChat', { email, token: accessToken });
+  
     } catch (error) {
-      Alert.alert('Error', 'Correo o contraseña incorrectos');
       console.error(error);
+      Alert.alert('Error', 'Ocurrió un error al iniciar sesión');
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   return (
     <View style={styles.container}>
@@ -86,6 +105,8 @@ const LoginScreen = () => {
     </View>
   );
 };
+
+export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -142,5 +163,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
-export default LoginScreen;
