@@ -1,17 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
-  SafeAreaView,
-  Image,
-  StatusBar
-} from 'react-native';
+import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet,
+  KeyboardAvoidingView, Platform, SafeAreaView, Image, StatusBar } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Markdown from 'react-native-markdown-display';
 
@@ -109,7 +98,7 @@ const ChatScreen = ({ navigation }) => {
       <View style={[styles.messageRow, isMe ? styles.rowRight : styles.rowLeft]}>
         {!isMe && (
           <Image
-            source={{ uri: 'https://i.pravatar.cc/100?img=8' }}
+            source={require('../../assets/icon/botuTherapy.png')}
             style={styles.avatar}
           />
         )}
@@ -157,14 +146,6 @@ const ChatScreen = ({ navigation }) => {
         style={styles.container}
         keyboardVerticalOffset={80}
       >
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation?.goBack?.()}>
-            <Ionicons name="arrow-back" size={24} color="#fff" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>uBot</Text>
-          <View style={{ width: 24 }} />
-        </View>
 
         {/* Chat */}
         <FlatList
