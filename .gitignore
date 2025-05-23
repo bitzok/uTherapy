@@ -87,5 +87,8 @@ backend/.env
 *.sql
 *.dump
 
+eas.json
+frontend/eas.json
+
 **/migrations/
 !**/migrations/__init__.py

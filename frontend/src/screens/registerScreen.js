@@ -25,8 +25,21 @@ const EmailLoginScreen = () => {
       });
   
       if (!response.ok) {
-        const errorData = await response.json();
-        Alert.alert("Error", errorData.message || "Error al registrar.");
+        let errorMessage = "Error al registrar.";
+        try {
+          const contentType = response.headers.get("content-type");
+          if (contentType && contentType.includes("application/json")) {
+            const errorData = await response.json();
+            errorMessage = errorData.message || errorData.detail || errorMessage;
+          } else {
+            const text = await response.text(); // en caso sea texto plano
+            if (text) errorMessage = text;
+          }
+        } catch (parseError) {
+          errorMessage = "Error inesperado del servidor.";
+        }
+
+        Alert.alert("Error", errorMessage);
         return;
       }
   

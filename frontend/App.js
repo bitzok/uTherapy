@@ -8,6 +8,7 @@ import Register from './src/screens/registerScreen';
 import VerificationCode from './src/screens/verificationCodeScreen';
 import Password from './src/screens/passwordScreen';
 import LoginScreen from './src/screens/loginScreen';
+import AppNavigator from './src/screens/appNavigator';
 
 const Stack = createStackNavigator();
 
@@ -19,8 +20,8 @@ export default function App() {
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="VerificationCode" component={VerificationCode} />
         <Stack.Screen name="Password" component={Password} />
-        <Stack.Screen name="MainChat" component={MainChat} />
-        <Stack.Screen name = "Login" component={LoginScreen}/>
+        <Stack.Screen name="Login" component={LoginScreen}/>
+        <Stack.Screen name="AppNavigator" component={AppNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
   );

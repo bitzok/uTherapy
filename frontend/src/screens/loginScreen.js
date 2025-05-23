@@ -45,8 +45,9 @@ const LoginScreen = () => {
       // Aquí podrías guardar el token en AsyncStorage si es necesario
       // await AsyncStorage.setItem("accessToken", accessToken);
   
-      Alert.alert('Éxito', 'Inicio de sesión correcto');
-      navigation.navigate('MainChat', { email, token: accessToken });
+      navigation.replace('AppNavigator', { email, token: accessToken });
+
+      // navigation.navigate('MainChat', { email, token: accessToken });
   
     } catch (error) {
       console.error(error);
