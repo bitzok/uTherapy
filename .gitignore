@@ -92,3 +92,5 @@ frontend/eas.json
 
 **/migrations/
 !**/migrations/__init__.py
+
+backend/database
